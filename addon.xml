@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="plugin.video.example"
-version="2.1.1"
-name="Example Kodi Video Plugin"
-provider-name="Roman_V_M">
+<addon id="plugin.video.teststream"
+version="0.0.1"
+name="test stream"
+provider-name="snowoody">
 <requires>
   <import addon="xbmc.python" version="2.24.0"/>
   <import addon="script.module.urlresolver" version="3.0.12"/>
@@ -11,9 +11,9 @@ provider-name="Roman_V_M">
   <provides>video</provides>
 </extension>
 <extension point="xbmc.addon.metadata">
-  <summary lang="en">Example Kodi Video Plugin</summary>
-  <description lang="en">An example video plugin for Kodi mediacenter.</description>
-  <disclaimer lang="en">Free sample videos are provided by www.vidsplay.com.</disclaimer>
+  <summary lang="en">test for streaming</summary>
+  <description lang="en">TBA</description>
+  <disclaimer lang="en">test</disclaimer>
   <assets>
     <icon>icon.png</icon>
     <fanart>fanart.jpg</fanart>
