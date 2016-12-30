@@ -8,6 +8,7 @@ provider-name="snowoody">
   <import addon="script.module.urlresolver" version="3.0.12"/>
   <import addon="script.module.requests" version="2.9.1" />
   <import addon="script.module.beautifulsoup4" version="4.3.2" />
+  <import addon="script.module.html5lib" version="0.999.0" />
 </requires>
 <extension point="xbmc.python.pluginsource" library="main.py">
   <provides>video</provides>
