@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="plugin.video.teststream"
-version="0.0.1"
-name="test stream"
+version="0.0.2"
+name="stream at home"
 provider-name="snowoody">
 <requires>
   <import addon="xbmc.python" version="2.24.0"/>
@@ -14,16 +14,13 @@ provider-name="snowoody">
   <provides>video</provides>
 </extension>
 <extension point="xbmc.addon.metadata">
-  <summary lang="en">test for streaming</summary>
+  <summary lang="en">streaming</summary>
   <description lang="en">TBA</description>
-  <disclaimer lang="en">test</disclaimer>
+  <disclaimer lang="en">TBA</disclaimer>
   <assets>
     <icon>icon.png</icon>
     <fanart>fanart.jpg</fanart>
-    <screenshot>resources\screenshot-01.jpg</screenshot>
-    <screenshot>resources\screenshot-02.jpg</screenshot>
-    <screenshot>resources\screenshot-03.jpg</screenshot>    
   </assets>
-  <news>Updated with latest artwork metadata</news>
+  <news>Testing version</news>
 </extension>
 </addon>
