@@ -220,20 +220,13 @@ def find_ms_episode(url):
 # get the parsed json object from the page content
 def get_json_from_content(content):
     if content:
-        bs_obj = BeautifulSoup(content, "html.parser")
+        val_string = re.compile(r'var pageData = ([^;]+);', re.MULTILINE | re.DOTALL)
 
-        val_string = re.compile(r'var pageData = (.+);', re.MULTILINE | re.DOTALL)
-
-        page_data = bs_obj.find("script", text=val_string)
-        if page_data:
-            match = val_string.search(page_data.text)
-            if match:
-                json_str = match.group(1)
-                json_obj = json.loads(json_str)
-                return json_obj
-            else:
-                log_msg("Cannot find pageData definition in the web page.")
-                log_msg(content)
+        match = val_string.search(content)
+        if match:
+            json_str = match.group(1)
+            json_obj = json.loads(json_str)
+            return json_obj
         else:
             log_msg("Cannot find pageData definition in the web page.")
             log_msg(content)

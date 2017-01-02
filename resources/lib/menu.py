@@ -6,6 +6,7 @@
 #   2: search in the episode page for the video link
 #   3: play the video
 #   4: search in the main page for categories - maplestage - currently only support manual list
+#   5: search using user input for series - maplestage
 # 101: search in the series for episodes - dnvod
 # 103: play the video in the episode page - dnvod
 # 104: search in the main page for category - dnvod
@@ -47,6 +48,16 @@ main_menu = [
 ]
 
 maplestage_menu = [
+    {
+        "title": u'Search',
+        "url": u'http://maplestage.com/v1/search',
+        "mode": 5,  # for searching for episodes.
+        "poster": "none",
+        "icon": 'DefaultVideo.png',
+        # "fanart":os.path.join(home, '', 'fanart.jpg'),
+        "type": "",
+        "plot": ""
+    },
     {
         "title": u'夢想的聲音',
         "url": u'http://maplestage.com/show/%E5%A4%A2%E6%83%B3%E7%9A%84%E8%81%B2%E9%9F%B3',

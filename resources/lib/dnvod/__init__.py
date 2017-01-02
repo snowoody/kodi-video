@@ -3,14 +3,12 @@
 # dnvodPlayer
 # adapted from Cameron
 
-import sys
 import requests
 import re
 import urllib
 import urllib2
 import exceptions
 from bs4 import BeautifulSoup
-import HTMLParser
 import xbmcgui
 import xbmc
 

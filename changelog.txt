@@ -1,3 +1,6 @@
+v0.0.5 (2017-1-2)
+- Add search function for maplestage
+
 v0.0.4 (2017-1-1)
 - Update addon id to plugin.video.streamathome
 

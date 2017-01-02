@@ -9,6 +9,7 @@ import urlresolver
 import xbmcaddon
 from resources.lib import menu
 from resources.lib import operations
+from resources.lib import maplestage
 from resources.lib import dnvod
 from resources.lib import streamhd
 
@@ -62,6 +63,11 @@ elif mode == 3:
     operations.play_media(video_title, parameters['icon'], url, "Video", False, video_title)
 elif mode == 4:
     menu = menu.maplestage_menu
+    operations.add_menu_items(menu)
+elif mode == 5:
+    xbmcplugin.setContent(int(sys_arg), "movies")
+    url = parameters['url']
+    menu = maplestage.search_for_series(url)
     operations.add_menu_items(menu)
 elif mode == 101:
     xbmcplugin.setContent(int(sys_arg), "movies")

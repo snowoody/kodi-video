@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="plugin.video.streamathome"
-version="0.0.3"
+version="0.0.5"
 name="STream AT homE"
 provider-name="snowoody">
 <requires>
@@ -15,14 +15,13 @@ provider-name="snowoody">
 </extension>
 <extension point="xbmc.addon.metadata">
   <summary lang="en">Streaming as you like</summary>
-  <description lang="en">Streaming from dnvod.eu, StreamHD.eu and maplestage.com.
-      No search functionability provided.</description>
+  <description lang="en">Streaming from dnvod.eu, StreamHD.eu and maplestage.com.</description>
   <disclaimer lang="en">TBA</disclaimer>
   <assets>
     <icon>icon.png</icon>
     <fanart>fanart.jpg</fanart>
   </assets>
-  <news>Added StreamHD.eu</news>
+  <news>Added search function for maplestage</news>
   <email>plugin.video.streamathome@gmail.com</email>
 </extension>
 </addon>
