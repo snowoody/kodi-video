@@ -13,7 +13,7 @@ from resources.lib import dnvod
 from resources.lib import streamhd
 
 sys_arg=str(sys.argv[1])
-ADDON_ID = 'plugin.video.teststream'
+ADDON_ID = 'plugin.video.streamathome'
 addon = xbmcaddon.Addon(id=ADDON_ID)
 parameters = operations.parse_parameters()
 try:

@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 import xbmc
 import xbmcgui
 
-ADDON_ID = 'plugin.video.teststream'
+ADDON_ID = 'plugin.video.streamathome'
 
 url1 = 'http://www.streamhd.eu'
 url2 = 'http://www.streamhd.eu'

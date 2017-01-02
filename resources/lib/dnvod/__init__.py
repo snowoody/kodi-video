@@ -15,7 +15,7 @@ import xbmcgui
 import xbmc
 
 
-ADDON_ID = 'plugin.video.teststream'
+ADDON_ID = 'plugin.video.streamathome'
 
 url1 = 'http://www.dnvod.eu'
 url2 = 'http://www.dnvod.eu/Movie/Readyplay.aspx?id=KVGG7jEHOhU%3d'
