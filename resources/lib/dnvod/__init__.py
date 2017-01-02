@@ -239,31 +239,32 @@ def find_dnvod_serie(url, page_num="1"):
         serie_item['plot'] = ""
         serie_list.append(serie_item)
 
-    # TODO: add a 'next' menu in the list
     # add the link to next page
-    pagers = bs_obj.find_all("div", {"id": "pager_List"})[0]
-    for pager in pagers.find_all("a"):
-        if pager.text == u'下页':
-            if pager.has_attr("href"):
-                next_url = pager.get("href")
-                page_num_pattern = re.compile(r'page=(\d+)')
-                page_num = page_num_pattern.findall(next_url)[0]
+    pager_link = bs_obj.find_all("div", {"id": "pager_List"})
+    if len(pager_link) > 0:
+        pagers = pager_link[0]
+        for pager in pagers.find_all("a"):
+            if pager.text == u'下页':
+                if pager.has_attr("href"):
+                    next_url = pager.get("href")
+                    page_num_pattern = re.compile(r'page=(\d+)')
+                    page_num = page_num_pattern.findall(next_url)[0]
 
-                next_item = {}
-                next_item['title'] = "Next Page >>"
-                next_item['url'] = url
-                next_item['mode'] = 105
-                next_item['icon'] = "http://www.dnvod.eu/images/logo.jpg"  # currently using the website icon for categories.
-                next_item['type'] = ""
-                next_item['plot'] = ""
-                next_item['page_num'] = page_num
-                serie_list.append(next_item)
+                    next_item = {}
+                    next_item['title'] = "Next Page >>"
+                    next_item['url'] = url
+                    next_item['mode'] = 105
+                    next_item['icon'] = "http://www.dnvod.eu/images/logo.jpg"  # currently using the website icon for categories.
+                    next_item['type'] = ""
+                    next_item['plot'] = ""
+                    next_item['page_num'] = page_num
+                    serie_list.append(next_item)
+                else:
+                    # this should mean the button is disabled, which means the current page is the last one
+                    break
             else:
-                # this should mean the button is disabled, which means the current page is the last one
-                break
-        else:
-            # other pagers. ignore
-            continue
+                # other pagers. ignore
+                continue
 
     return serie_list
 

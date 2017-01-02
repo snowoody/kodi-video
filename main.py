@@ -10,6 +10,7 @@ import xbmcaddon
 from resources.lib import menu
 from resources.lib import operations
 from resources.lib import dnvod
+from resources.lib import streamhd
 
 sys_arg=str(sys.argv[1])
 ADDON_ID = 'plugin.video.teststream'
@@ -83,6 +84,20 @@ elif mode == 105:
     if 'pagenum' in parameters:
         page_num = parameters['pagenum']
     menu = dnvod.find_dnvod_serie(url, page_num)
+    operations.add_menu_items(menu)
+elif mode == 203:
+    url = parameters['url']
+    video_link = streamhd.get_video_link(url)
+    streamhd.play_media(video_link, parameters['name'])
+elif mode == 204:
+    xbmcplugin.setContent(int(sys_arg), "movies")
+    url = parameters['url']
+    menu = streamhd.find_category(url)
+    operations.add_menu_items(menu)
+elif mode == 205:
+    xbmcplugin.setContent(int(sys_arg), "movies")
+    url = parameters['url']
+    menu = streamhd.find_video_link(url)
     operations.add_menu_items(menu)
 else:
     operations.add_menu_items(menu.main_menu)

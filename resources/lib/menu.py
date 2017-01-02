@@ -10,6 +10,9 @@
 # 103: play the video in the episode page - dnvod
 # 104: search in the main page for category - dnvod
 # 105: search in the category page for series - dnvod
+# 203: play the video in the item page - streamhd
+# 204: search in the main page for category - streamhd
+# 205: search in the category page for the links - streamhd
 main_menu = [
     {
         "title": u'多瑙影院',
@@ -27,6 +30,16 @@ main_menu = [
         "mode": 4,  # for searching for episodes.
         "poster": "none",
         "icon": 'DefaultVideo.png',
+        # "fanart":os.path.join(home, '', 'fanart.jpg'),
+        "type": "",
+        "plot": ""
+    },
+    {
+        "title": u'StreamHD.eu',
+        "url": u'http://www.streamhd.eu/',
+        "mode": 204,  # for searching for episodes.
+        "poster": "none",
+        "icon": 'http://www.streamhd.eu/images/logo.png',
         # "fanart":os.path.join(home, '', 'fanart.jpg'),
         "type": "",
         "plot": ""

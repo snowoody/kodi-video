@@ -1,1 +1,1 @@
-# testing addon for streaming
+# Streaming on dnvod.eu

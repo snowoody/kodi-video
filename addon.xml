@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="plugin.video.teststream"
-version="0.0.2"
-name="stream at home"
+version="0.0.3"
+name="STream AT homE"
 provider-name="snowoody">
 <requires>
   <import addon="xbmc.python" version="2.24.0"/>
@@ -14,13 +14,15 @@ provider-name="snowoody">
   <provides>video</provides>
 </extension>
 <extension point="xbmc.addon.metadata">
-  <summary lang="en">streaming</summary>
-  <description lang="en">TBA</description>
+  <summary lang="en">Streaming as you like</summary>
+  <description lang="en">Streaming from dnvod.eu, StreamHD.eu and maplestage.com.
+      No search functionability provided.</description>
   <disclaimer lang="en">TBA</disclaimer>
   <assets>
     <icon>icon.png</icon>
     <fanart>fanart.jpg</fanart>
   </assets>
-  <news>Testing version</news>
+  <news>Added StreamHD.eu</news>
+  <email>plugin.video.streamathome@gmail.com</email>
 </extension>
 </addon>

@@ -1,0 +1,8 @@
+v0.0.3 (2017-1-1)
+- Add StreamHD.eu
+
+v0.0.2  (2016-12-30)
+- Add dnvod.eu and partial support for maplestage
+
+v0.0.1  (2016-12-29)
+- Initial version
