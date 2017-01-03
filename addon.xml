@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="plugin.video.streamathome"
-version="0.0.5"
+version="0.0.6"
 name="STream AT homE"
 provider-name="snowoody">
 <requires>
@@ -21,7 +21,7 @@ provider-name="snowoody">
     <icon>icon.png</icon>
     <fanart>fanart.jpg</fanart>
   </assets>
-  <news>Added search function for maplestage</news>
+  <news>Fixed streamHD scrapper issue.</news>
   <email>plugin.video.streamathome@gmail.com</email>
 </extension>
 </addon>

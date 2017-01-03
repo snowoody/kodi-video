@@ -37,9 +37,9 @@ client_header = {"User-Agent": 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
 def find_category(url):
     request_1 = urllib2.Request(url, None, client_header)
     response_1 = urllib2.urlopen(request_1)
-    content = response_1.read()
+    content = response_1.read().replace('\r', '')
 
-    bs_obj = BeautifulSoup(content, "html.parser")
+    bs_obj = BeautifulSoup(content.decode('utf-8', 'ignore'), "html5lib")
 
     menu_list = []
     # find the front page list
