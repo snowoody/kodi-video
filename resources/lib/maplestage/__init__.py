@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # maplestage
+import urllib
 import urllib2
 import json
 import xbmc
@@ -37,7 +38,7 @@ def search_for_series(url):
     if not search_str:
         return menu.maplestage_menu
 
-    url = url + "?q=" + search_str
+    url = url + "?q=" + urllib.quote_plus(search_str)
     request = urllib2.Request(url, None, headers=client_header)
     response = urllib2.urlopen(request)
     content = response.read()
