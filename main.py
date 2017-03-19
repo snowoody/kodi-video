@@ -7,11 +7,34 @@ import sys
 import xbmcplugin
 import urlresolver
 import xbmcaddon
+
+# import xbmc
+#
+#
+# import sys
+# import os
+# apppath = xbmc.translatePath(os.path.join('special://home/addons/plugin.video.streamathome-master', ''))
+# print(apppath)
+# print(sys.path)
+# sys.path.append(apppath + 'lib')
+# print(sys.path)
+#
+# import cfscrape
+#
+# scraper = cfscrape.create_scraper()  # returns a CloudflareScraper instance
+# # Or: scraper = cfscrape.CloudflareScraper()  # CloudflareScraper inherits from requests.Session
+# print scraper.get("http://dnvod.eu").content
+#
+#
+# raise Exception("main die")
+
+
 from resources.lib import menu
 from resources.lib import operations
 from resources.lib import maplestage
-from resources.lib import dnvod
+# from resources.lib import dnvod
 from resources.lib import streamhd
+
 
 sys_arg=str(sys.argv[1])
 ADDON_ID = 'plugin.video.streamathome'
@@ -22,31 +45,19 @@ try:
 except:
     mode = None
 
-# url = u'http://maplestage.com/show/蒙面唱將猜猜猜'
-# li = xbmcgui.ListItem(u'蒙面唱將猜猜猜', iconImage='DefaultVideo.png')
-# li.setProperty('IsPlayable', 'false')
-# xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=url, listitem=li, isFolder=True)
-#
-# # url = urlresolver.resolve('http://javonline.tv/watch/heyzo-1356-satomi-fucked-by-geek-on-xmas-6479.html')
-# url = urlresolver.resolve('http://www.dailymotion.com/video/k5njbR3LH6K4WFlcYFK')
-# li = xbmcgui.ListItem('other', iconImage='DefaultVideo.png')
-# li.setProperty('IsPlayable', 'true')
-# xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=url, listitem=li, isFolder=False)
-#
-# url = urlresolver.resolve('https://www.youtube.com/watch?v=0y-o8LUF8w4')
-# li = xbmcgui.ListItem('youtube', iconImage='DefaultVideo.png')
-# li.setProperty('IsPlayable', 'true')
-# xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=url, listitem=li, isFolder=False)
-#
-# url = urlresolver.resolve('http://www.dailymotion.com/embed/video/k5ntMyPnuSj641jPwuO')
-# li = xbmcgui.ListItem('dailymotion', iconImage='DefaultVideo.png')
-# li.setProperty('IsPlayable', 'true')
-# xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=url, listitem=li, isFolder=False)
-#
-#
-# xbmcplugin.endOfDirectory(int(sys.argv[1]))
+# modes:
+# first three digits: sites
+#   001: http://www.dnvod.eu/
+#   002: http://maplestage.com/
+#   003: http://www.streamhd.eu/
+# last 2 digits: action
+#   01: play the video
+#   02: search in the item page for video link
+#   03: search in the series page for items
+#   04: search in the category page for series
+#   05: search in the main page for categories
 
-# search for episodes
+
 if mode == 1:
     xbmcplugin.setContent(int(sys_arg), "movies")
     url = parameters['url']
@@ -69,28 +80,28 @@ elif mode == 5:
     url = parameters['url']
     menu = maplestage.search_for_series(url)
     operations.add_menu_items(menu)
-elif mode == 101:
-    xbmcplugin.setContent(int(sys_arg), "movies")
-    url = parameters['url']
-    menu = dnvod.find_dnvod_episode(url)
-    operations.add_menu_items(menu)
-elif mode == 103:
-    url = parameters['url']
-    url = dnvod.get_video_link(url, parameters['resolution'])
-    dnvod.play_media(url, parameters['name'], parameters['icon'])
-elif mode == 104:
-    xbmcplugin.setContent(int(sys_arg), "movies")
-    url = parameters['url']
-    menu = dnvod.find_dnvod_category(url)
-    operations.add_menu_items(menu)
-elif mode == 105:
-    xbmcplugin.setContent(int(sys_arg), "movies")
-    url = parameters['url']
-    page_num = '1'
-    if 'pagenum' in parameters:
-        page_num = parameters['pagenum']
-    menu = dnvod.find_dnvod_serie(url, page_num)
-    operations.add_menu_items(menu)
+# elif mode == 101:
+#     xbmcplugin.setContent(int(sys_arg), "movies")
+#     url = parameters['url']
+#     menu = dnvod.find_dnvod_episode(url)
+#     operations.add_menu_items(menu)
+# elif mode == 103:
+#     url = parameters['url']
+#     url = dnvod.get_video_link(url, parameters['resolution'])
+#     dnvod.play_media(url, parameters['name'], parameters['icon'])
+# elif mode == 104:
+#     xbmcplugin.setContent(int(sys_arg), "movies")
+#     url = parameters['url']
+#     menu = dnvod.find_dnvod_category(url)
+#     operations.add_menu_items(menu)
+# elif mode == 105:
+#     xbmcplugin.setContent(int(sys_arg), "movies")
+#     url = parameters['url']
+#     page_num = '1'
+#     if 'pagenum' in parameters:
+#         page_num = parameters['pagenum']
+#     menu = dnvod.find_dnvod_serie(url, page_num)
+#     operations.add_menu_items(menu)
 elif mode == 203:
     url = parameters['url']
     video_link = streamhd.get_video_link(url)
