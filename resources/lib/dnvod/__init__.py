@@ -3,68 +3,76 @@
 # dnvodPlayer
 # adapted from Cameron
 
-import requests
 import re
-import urllib
-import urllib2
 import exceptions
 from bs4 import BeautifulSoup
-import xbmcgui
+import cookielib
+import urllib
+import urllib2
 import xbmc
+import xbmcgui
+
+import cfscrape
+from ... import kodi
+from .. import operations
+
+ADDON_ID = kodi.addon_id
+
+scraper = cfscrape.create_scraper()
+
+cookies, user_agent = cfscrape.get_cookie_string("http://dnvod.eu")
+
+url2 = 'http://www.dnvod.eu/Movie/Readyplay.aspx?id=7COqHhPaRZg%3d'
 
 
-ADDON_ID = 'plugin.video.streamathome'
+class NoRedirection(urllib2.HTTPErrorProcessor):
+    def http_response(self,request,response):
+        return response
 
-url1 = 'http://www.dnvod.eu'
-url2 = 'http://www.dnvod.eu/Movie/Readyplay.aspx?id=KVGG7jEHOhU%3d'
+cookie = cookielib.MozillaCookieJar()
+# opener = urllib2.build_opener(NoRedirection, urllib2.HTTPCookieProcessor(cookie), urllib2.HTTPHandler(debuglevel=1))
+opener = urllib2.build_opener(NoRedirection, urllib2.HTTPCookieProcessor(cookie))
+urllib2.install_opener(opener)
 
 
-# get ASP.NET_SessionId
-def get_session_id(url_1, url_2):
-    session = requests.Session()
-    session.get(url_1)
-    r1 = session.get(url_2)
-    header = r1.headers
-    reg = r'ASP.NET_SessionId=(.*); path=/; HttpOnly'
-    pattern = re.compile(reg)
-    session_id_result = pattern.findall(header['Set-Cookie'])[0]
-    return session_id_result
+def add_session_id(url2, cookies):
+    request = urllib2.Request(url2)
+    request.add_header("User-Agent", user_agent)
+    request.add_header("Cookie", cookies)
+    request.add_header('Referer', 'http://dnvod.eu')
 
-session_id = get_session_id(url1, url2)
+    response = urllib2.urlopen(request)
+    header1 = response.info().headers
 
-# create user headers
-dnvod_header = {"User-Agent": 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
-           "Content-Type": "application/x-www-form-urlencoded",
-           "Accept": "*/*",
-           "Referer": "http://www.dnvod.eu/Movie/Readyplay.aspx?id=jydSM%2fudfCo%3d",
-           "Accept-Encoding": "",
-           "Accept-Language": "de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4,zh-CN;q=0.2,zh;q=0.2,zh-TW;q=0.2,fr-FR;q=0.2,fr;q=0.2",
-           "X-Requested-With": "XMLHttpRequest",
-           "DNT": "1",
-           "Cookie": 'ASP.NET_SessionId='+session_id}
+    sessionID = ''
+    for i in header1:
+        m = re.compile(r'ASP.NET_SessionId=(.*); path=/; HttpOnly').findall(i)
+        if len(m) > 0:
+            sessionID = m[0]
+    if sessionID == '':
+        operations.log_msg("Cannot find session id in " + '\n'.join(header1))
 
-# create server headers
-dnvod_server_header = {"Host": "www.dnvod.eu",
-            "Content-Length": "36",
-            "Cache-Control": "nax-age=0",
-            "Accept": "*/*",
-            "Origin": "http://www.dnvod.eu",
-            "X-Requested-With": "XMLHttpRequest",
-            "User-Agent": 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "DNT": "1",
-            "Referer": "http://www.dnvod.eu/Movie/Readyplay.aspx?id=%2bWXev%2bhf16w%3d",
-            "Accept-Encoding": "",
-            "Accept-Language": "de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4,zh-CN;q=0.2,zh;q=0.2,zh-TW;q=0.2,fr-FR;q=0.2,fr;q=0.2",
-            "Connection": "keep-alive",
-            "Cookie": 'ASP.NET_SessionId='+session_id}
+    print("session id: " + sessionID)
+
+    cookies += "; ASP.NET_SessionId=" + sessionID
+
+    return cookies
+
+
+cookies = add_session_id(url2, cookies)
 
 
 # find episodes from series link
 def find_dnvod_episode(url):
-    request_1 = urllib2.Request(url, None, dnvod_header)
-    response_1 = urllib2.urlopen(request_1)
-    content = response_1.read()
+
+    request = urllib2.Request(url)
+    request.add_header("User-Agent", user_agent)
+    request.add_header("Cookie", cookies)
+    request.add_header('Referer', url)
+
+    response = urllib2.urlopen(request)
+
+    content = response.read()
 
     bs_obj = BeautifulSoup(content, "html.parser")
     # find the series title
@@ -76,8 +84,8 @@ def find_dnvod_episode(url):
         img = "http:" + img
     except exceptions.IndexError:
         img = ""
-        log_msg("Cannot find image link")
-        log_msg(content)
+        operations.log_msg("Cannot find image link")
+        operations.log_msg(content)
 
     # find the links to each episode
     episode_list = []
@@ -94,19 +102,27 @@ def find_dnvod_episode(url):
         episode_item['plot'] = ""
         episode_item['resolution'] = "sd"
         episode_list.append(episode_item)
-        episode_item_hd = episode_item.copy()
-        episode_item_hd['resolution'] = "hd"
-        episode_item_hd['title'] += ' - HD'
-        episode_list.append(episode_item_hd)
+        # episode_item_hd = episode_item.copy()
+        # episode_item_hd['resolution'] = "hd"
+        # episode_item_hd['title'] += ' - HD'
+        # episode_list.append(episode_item_hd)
 
     return episode_list
 
 
 # get the playable video link from the episode url
 def get_video_link(url, resolution='sd'):
-    request_1 = urllib2.Request(url, None, dnvod_header)
-    response_1 = urllib2.urlopen(request_1)
-    response_content_1 = response_1.read()
+
+    request = urllib2.Request(url)
+    request.add_header("User-Agent", user_agent)
+    request.add_header("Cookie", cookies)
+    request.add_header('Referer', url)
+
+    response = urllib2.urlopen(request)
+
+    response_content_1 = response.read()
+
+    operations.log_msg(response_content_1)
 
     # get resource id
     reg_id = r'id:.*\'(.*)\','
@@ -119,41 +135,49 @@ def get_video_link(url, resolution='sd'):
     res_key = pattern_key.findall(response_content_1)[0]
 
     url_2 = 'http://www.dnvod.eu/Movie/GetResource.ashx?id='+res_id+'&type=htm'
-
     ref = urllib.urlencode({'key': res_key})
-    request_2 = urllib2.Request(url_2, ref, dnvod_server_header)
-    response_2 = urllib2.urlopen(request_2)
+    request = urllib2.Request(url_2, ref)
+    request.add_header("User-Agent", user_agent)
+    request.add_header("Cookie", cookies + '; dn_config=device=desktop&player=CkPlayer&tech=HLS; _uid=042c3b5633714f96bdafde48ac4b24e2')
+    request.add_header('Referer', url)
+
+    response_2 = urllib2.urlopen(request)
+
+    # response_2 = scraper.post(url_2, data={'key': res_key})
+    # ref = urllib.urlencode({'key': res_key})
+    # request_2 = urllib2.Request(url_2, ref, dnvod_server_header)
+    # response_2 = urllib2.urlopen(request_2)
+    # real_url = response_2.content
     real_url = response_2.read()
-    print("dnvod link: " + real_url)
-    pattern = re.compile(r'(\d||\d\d||\d\d\d||\d\d\d\d||\d\d\d\d\d||\d\d\d\d\d\d||\d\d\d\d\d\d\d||\d\d\d\d\d\d\d\d)\.mp4')
-    num = re.split(pattern, real_url)
-    hd_url = num[0]+'hd-'+num[1]+'.mp4'+num[2]
+    links = real_url.split('<>')
+    real_url = links[-1]
+    hd_url = links[-1]
+    # print("dnvod link: " + real_url)
+    # pattern = re.compile(r'(\d||\d\d||\d\d\d||\d\d\d\d||\d\d\d\d\d||\d\d\d\d\d\d||\d\d\d\d\d\d\d||\d\d\d\d\d\d\d\d)\.mp4')
+    # num = re.split(pattern, real_url)
+    # hd_url = num[0]+'hd-'+num[1]+'.mp4'+num[2]
 
     if resolution == 'sd':
         return real_url
     elif resolution == 'hd':
         return hd_url
     else:
-        log_msg("Cannot recognized resolution " + resolution + ".")
+        operations.log_msg("Cannot recognized resolution " + resolution + ".")
 
     return ""
 
 
-# play the dnvod url.
-def play_media(url, title, thumbnail):
-    playlist = xbmc.PlayList(1)
-    playlist.clear()
-    list_item = xbmcgui.ListItem(u'Play 播放', iconImage=thumbnail, thumbnailImage=thumbnail)
-    list_item.setInfo(type='video', infoLabels={"Title": title})
-    playlist.add(url, listitem=list_item)
-    xbmc.Player().play(playlist)
-
-
 # get the category list from main page
 def find_dnvod_category(url):
-    request_1 = urllib2.Request(url, None, dnvod_header)
-    response_1 = urllib2.urlopen(request_1)
-    content = response_1.read()
+
+    request = urllib2.Request(url)
+    request.add_header("User-Agent", user_agent)
+    request.add_header("Cookie", cookies)
+    request.add_header('Referer', url)
+
+    response = urllib2.urlopen(request)
+
+    content = response.read()
 
     bs_obj = BeautifulSoup(content.decode('utf-8', 'ignore'), "html5lib")
 
@@ -207,9 +231,15 @@ def find_dnvod_serie(url, page_num="1"):
     # add the page number parameter to the url if the page number is not 1.
     if page_num != "1":
         url = url + "&page=" + page_num
-    request_1 = urllib2.Request(url, None, dnvod_header)
-    response_1 = urllib2.urlopen(request_1)
-    content = response_1.read()
+
+    request = urllib2.Request(url)
+    request.add_header("User-Agent", user_agent)
+    request.add_header("Cookie", cookies)
+    request.add_header('Referer', url)
+
+    response = urllib2.urlopen(request)
+
+    content = response.read()
 
     serie_list = []
     bs_obj = BeautifulSoup(content.decode('utf-8', 'ignore'), "html5lib")
@@ -267,13 +297,13 @@ def find_dnvod_serie(url, page_num="1"):
     return serie_list
 
 
-# log the message according the to log level.
-def log_msg(msg, log_level=xbmc.LOGERROR):
-    head = ADDON_ID + " - "
-    try:
-        xbmc.log(head + str(msg.encode("utf-8")), log_level)
-    except:
-        xbmc.log(head + str(msg), log_level)
+def play_media(url, title, thumbnail):
+    playlist = xbmc.PlayList(1)
+    playlist.clear()
+    list_item = xbmcgui.ListItem(u'Play 播放', iconImage=thumbnail, thumbnailImage=thumbnail)
+    list_item.setInfo(type='video', infoLabels={"Title": title})
+    playlist.add(url, listitem=list_item)
+    xbmc.Player().play(playlist)
 
 
 

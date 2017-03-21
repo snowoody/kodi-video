@@ -8,16 +8,18 @@ import xbmcplugin
 import urlresolver
 import xbmcaddon
 
-# import xbmc
-#
-#
-# import sys
-# import os
-# apppath = xbmc.translatePath(os.path.join('special://home/addons/plugin.video.streamathome-master', ''))
-# print(apppath)
-# print(sys.path)
-# sys.path.append(apppath + 'lib')
-# print(sys.path)
+import xbmc
+
+import sys
+import os
+
+from resources import kodi
+ADDON_ID = kodi.addon_id
+apppath = xbmc.translatePath(os.path.join('special://home/addons/'+ADDON_ID, ''))
+print(apppath)
+print(sys.path)
+sys.path.append(apppath + 'lib')
+print(sys.path)
 #
 # import cfscrape
 #
@@ -32,12 +34,11 @@ import xbmcaddon
 from resources.lib import menu
 from resources.lib import operations
 from resources.lib import maplestage
-# from resources.lib import dnvod
+from resources.lib import dnvod
 from resources.lib import streamhd
 
 
 sys_arg=str(sys.argv[1])
-ADDON_ID = 'plugin.video.streamathome'
 addon = xbmcaddon.Addon(id=ADDON_ID)
 parameters = operations.parse_parameters()
 try:
@@ -80,28 +81,28 @@ elif mode == 5:
     url = parameters['url']
     menu = maplestage.search_for_series(url)
     operations.add_menu_items(menu)
-# elif mode == 101:
-#     xbmcplugin.setContent(int(sys_arg), "movies")
-#     url = parameters['url']
-#     menu = dnvod.find_dnvod_episode(url)
-#     operations.add_menu_items(menu)
-# elif mode == 103:
-#     url = parameters['url']
-#     url = dnvod.get_video_link(url, parameters['resolution'])
-#     dnvod.play_media(url, parameters['name'], parameters['icon'])
-# elif mode == 104:
-#     xbmcplugin.setContent(int(sys_arg), "movies")
-#     url = parameters['url']
-#     menu = dnvod.find_dnvod_category(url)
-#     operations.add_menu_items(menu)
-# elif mode == 105:
-#     xbmcplugin.setContent(int(sys_arg), "movies")
-#     url = parameters['url']
-#     page_num = '1'
-#     if 'pagenum' in parameters:
-#         page_num = parameters['pagenum']
-#     menu = dnvod.find_dnvod_serie(url, page_num)
-#     operations.add_menu_items(menu)
+elif mode == 101:
+    xbmcplugin.setContent(int(sys_arg), "movies")
+    url = parameters['url']
+    menu = dnvod.find_dnvod_episode(url)
+    operations.add_menu_items(menu)
+elif mode == 103:
+    url = parameters['url']
+    url = dnvod.get_video_link(url, parameters['resolution'])
+    dnvod.play_media(url, parameters['name'], parameters['icon'])
+elif mode == 104:
+    xbmcplugin.setContent(int(sys_arg), "movies")
+    url = parameters['url']
+    menu = dnvod.find_dnvod_category(url)
+    operations.add_menu_items(menu)
+elif mode == 105:
+    xbmcplugin.setContent(int(sys_arg), "movies")
+    url = parameters['url']
+    page_num = '1'
+    if 'pagenum' in parameters:
+        page_num = parameters['pagenum']
+    menu = dnvod.find_dnvod_serie(url, page_num)
+    operations.add_menu_items(menu)
 elif mode == 203:
     url = parameters['url']
     video_link = streamhd.get_video_link(url)
