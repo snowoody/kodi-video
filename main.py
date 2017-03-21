@@ -20,15 +20,6 @@ print(apppath)
 print(sys.path)
 sys.path.append(apppath + 'lib')
 print(sys.path)
-#
-# import cfscrape
-#
-# scraper = cfscrape.create_scraper()  # returns a CloudflareScraper instance
-# # Or: scraper = cfscrape.CloudflareScraper()  # CloudflareScraper inherits from requests.Session
-# print scraper.get("http://dnvod.eu").content
-#
-#
-# raise Exception("main die")
 
 
 from resources.lib import menu
@@ -57,6 +48,7 @@ except:
 #   03: search in the series page for items
 #   04: search in the category page for series
 #   05: search in the main page for categories
+#   06: search for series with text
 
 
 if mode == 1:
@@ -102,6 +94,14 @@ elif mode == 105:
     if 'pagenum' in parameters:
         page_num = parameters['pagenum']
     menu = dnvod.find_dnvod_serie(url, page_num)
+    operations.add_menu_items(menu)
+elif mode == 106:
+    xbmcplugin.setContent(int(sys_arg), "movies")
+    url = parameters['url']
+    menu = dnvod.search_for_serie(url)
+    operations.add_menu_items(menu)
+elif mode == 107:
+    menu = menu.dnvod_menu
     operations.add_menu_items(menu)
 elif mode == 203:
     url = parameters['url']

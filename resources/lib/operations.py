@@ -316,3 +316,12 @@ def get_vid_link_by_site(vid, site):
     return url
 
 
+# collect user inputs
+def get_search_input(question):
+    kb = xbmc.Keyboard(None, question, False)
+    kb.doModal()
+    if kb.isConfirmed():
+        text = kb.getText()
+        return text
+    else:
+        return False

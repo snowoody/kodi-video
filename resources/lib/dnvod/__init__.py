@@ -15,6 +15,7 @@ import xbmcgui
 import cfscrape
 from ... import kodi
 from .. import operations
+from .. import menu
 
 ADDON_ID = kodi.addon_id
 
@@ -305,6 +306,54 @@ def play_media(url, title, thumbnail):
     playlist.add(url, listitem=list_item)
     xbmc.Player().play(playlist)
 
+
+def search_for_serie(url):
+    search_str = operations.get_search_input("Search for shows")
+
+    # user did not give any input.
+    if not search_str:
+        return menu.main_menu   # TODO: add dnvod menu instead
+
+    # http://www.dnvod.eu/Movie/Search.aspx?tags=
+    url = url + "?tags=" + urllib.quote_plus(search_str)
+
+    request = urllib2.Request(url)
+    request.add_header("User-Agent", user_agent)
+    request.add_header("Cookie", cookies)
+    request.add_header('Referer', url)
+
+    response = urllib2.urlopen(request)
+
+    content = response.read()
+
+    serie_list = []
+    bs_obj = BeautifulSoup(content.decode('utf-8', 'ignore'), "html5lib")
+    series = bs_obj.find_all("div", {"class": "r-lb2"})[0].find_all("div", {"class": "cp_a"})
+    for serie in series:
+        serie_info = serie.find_all("a")[1]
+        serie_name = serie_info.get("title")
+        serie_url = serie_info.get("href")
+        if "http" not in serie_url:
+            serie_url = "http://www.dnvod.eu/Movie/" + serie_url
+        operations.log_msg("serie url: " + serie_url)
+
+        serie_img = serie.find_all("img")[0].get("src")
+        if serie_img.startswith("//"):
+            serie_img = "http:" + serie_img
+        elif not serie_img.startswith("http"):
+            serie_img = "http://www.dnvod.eu/Movie/" + serie_img
+
+
+        serie_item = {}
+        serie_item['title'] = serie_name
+        serie_item['url'] = serie_url
+        serie_item['mode'] = 101
+        serie_item['icon'] = serie_img
+        serie_item['type'] = ""
+        serie_item['plot'] = ""
+        serie_list.append(serie_item)
+
+    return serie_list
 
 
 

@@ -11,6 +11,8 @@
 # 103: play the video in the episode page - dnvod
 # 104: search in the main page for category - dnvod
 # 105: search in the category page for series - dnvod
+# 106: search using user input for series - dnvod
+# 107: list basic options - dnvod
 # 203: play the video in the item page - streamhd
 # 204: search in the main page for category - streamhd
 # 205: search in the category page for the links - streamhd
@@ -18,7 +20,7 @@ main_menu = [
     {
         "title": u'多瑙影院',
         "url": u'http://www.dnvod.eu/',
-        "mode": 104,
+        "mode": 107,
         "poster": "none",
         "icon": 'http://www.dnvod.eu/images/logo.jpg',
         # "fanart":os.path.join(home, '', 'fanart.jpg'),
@@ -87,4 +89,25 @@ maplestage_menu = [
         "type": "",
         "plot": ""
     },
+]
+
+dnvod_menu = [
+    {
+        "title": u'Search',
+        "url": u'http://www.dnvod.eu/Movie/Search.aspx',
+        "mode": 106,
+        "poster": 'none',
+        "icon": 'http://www.dnvod.eu/images/logo.jpg',
+        "type": "",
+        "plot": ""
+    },
+    {
+        "title": u'List Categories',
+        "url": u'http://www.dnvod.eu/Movie/Search.aspx',
+        "mode": 104,
+        "poster": 'none',
+        "icon": 'http://www.dnvod.eu/images/logo.jpg',
+        "type": "",
+        "plot": ""
+    }
 ]
