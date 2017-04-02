@@ -7,6 +7,7 @@ import re
 import exceptions
 from bs4 import BeautifulSoup
 import cookielib
+import json
 import urllib
 import urllib2
 import xbmc
@@ -22,6 +23,9 @@ ADDON_ID = kodi.addon_id
 scraper = cfscrape.create_scraper()
 
 cookies, user_agent = cfscrape.get_cookie_string("http://dnvod.eu")
+# cookies, user_agent = cfscrape.get_cookie_string("http://www.dnvod.eu/Movie/Readyplay.aspx?id=7COqHhPaRZg%3d")
+operations.log_msg("cookie: " + cookies, xbmc.LOGDEBUG)
+operations.log_msg("user_agent: " + user_agent, xbmc.LOGDEBUG)
 
 url2 = 'http://www.dnvod.eu/Movie/Readyplay.aspx?id=7COqHhPaRZg%3d'
 
@@ -37,12 +41,16 @@ urllib2.install_opener(opener)
 
 
 def add_session_id(url2, cookies):
+    request1 = urllib2.Request("http://dnvod.eu")
+    response1 = urllib2.urlopen(request1)
+    # operations.log_msg("add_session_id 1 : " + response1.read(), xbmc.LOGDEBUG)
     request = urllib2.Request(url2)
     request.add_header("User-Agent", user_agent)
     request.add_header("Cookie", cookies)
     request.add_header('Referer', 'http://dnvod.eu')
 
     response = urllib2.urlopen(request)
+    # operations.log_msg("add_session_id: " + response.read(), xbmc.LOGDEBUG)
     header1 = response.info().headers
 
     sessionID = ''
@@ -139,7 +147,7 @@ def get_video_link(url, resolution='sd'):
     ref = urllib.urlencode({'key': res_key})
     request = urllib2.Request(url_2, ref)
     request.add_header("User-Agent", user_agent)
-    request.add_header("Cookie", cookies + '; dn_config=device=desktop&player=CkPlayer&tech=HLS; _uid=042c3b5633714f96bdafde48ac4b24e2')
+    request.add_header("Cookie", cookies + '; dn_config=device=desktop&player=CkPlayer&tech=HLS')
     request.add_header('Referer', url)
 
     response_2 = urllib2.urlopen(request)
@@ -150,9 +158,14 @@ def get_video_link(url, resolution='sd'):
     # response_2 = urllib2.urlopen(request_2)
     # real_url = response_2.content
     real_url = response_2.read()
-    links = real_url.split('<>')
-    real_url = links[-1]
-    hd_url = links[-1]
+    operations.log_msg("dnvod video links: " + real_url, xbmc.LOGDEBUG)
+    url_json = json.loads(real_url)
+    real_url = url_json["http"]["provider"]
+    hd_url = real_url
+    operations.log_msg("video link : " + real_url, xbmc.LOGINFO)
+    # links = real_url.split('<>')
+    # real_url = links[-1]
+    # hd_url = links[-1]
     # print("dnvod link: " + real_url)
     # pattern = re.compile(r'(\d||\d\d||\d\d\d||\d\d\d\d||\d\d\d\d\d||\d\d\d\d\d\d||\d\d\d\d\d\d\d||\d\d\d\d\d\d\d\d)\.mp4')
     # num = re.split(pattern, real_url)
