@@ -147,8 +147,10 @@ def get_video_link(url, resolution='sd'):
     ref = urllib.urlencode({'key': res_key})
     request = urllib2.Request(url_2, ref)
     request.add_header("User-Agent", user_agent)
-    request.add_header("Cookie", cookies + '; dn_config=device=desktop&player=CkPlayer&tech=HLS')
+    request.add_header("Cookie", cookies + '; dn_config=device=desktop&player=CkPlayer&tech=HLS; _uid=0')
     request.add_header('Referer', url)
+
+    operations.log_msg(request.headers, xbmc.LOGDEBUG)
 
     response_2 = urllib2.urlopen(request)
 
