@@ -22,12 +22,12 @@ ADDON_ID = kodi.addon_id
 
 scraper = cfscrape.create_scraper()
 
-cookies, user_agent = cfscrape.get_cookie_string("http://dnvod.eu")
-# cookies, user_agent = cfscrape.get_cookie_string("http://www.dnvod.eu/Movie/Readyplay.aspx?id=7COqHhPaRZg%3d")
+cookies, user_agent = cfscrape.get_cookie_string("http://dnvod.tv")
+# cookies, user_agent = cfscrape.get_cookie_string("http://www.dnvod.tv/Movie/Readyplay.aspx?id=7COqHhPaRZg%3d")
 operations.log_msg("cookie: " + cookies, xbmc.LOGDEBUG)
 operations.log_msg("user_agent: " + user_agent, xbmc.LOGDEBUG)
 
-url2 = 'http://www.dnvod.eu/Movie/Readyplay.aspx?id=7COqHhPaRZg%3d'
+url2 = 'http://www.dnvod.tv/Movie/Readyplay.aspx?id=7COqHhPaRZg%3d'
 
 
 class NoRedirection(urllib2.HTTPErrorProcessor):
@@ -41,13 +41,13 @@ urllib2.install_opener(opener)
 
 
 def add_session_id(url2, cookies):
-    request1 = urllib2.Request("http://dnvod.eu")
+    request1 = urllib2.Request("http://dnvod.tv")
     response1 = urllib2.urlopen(request1)
     # operations.log_msg("add_session_id 1 : " + response1.read(), xbmc.LOGDEBUG)
     request = urllib2.Request(url2)
     request.add_header("User-Agent", user_agent)
     request.add_header("Cookie", cookies)
-    request.add_header('Referer', 'http://dnvod.eu')
+    request.add_header('Referer', 'http://dnvod.tv')
 
     response = urllib2.urlopen(request)
     # operations.log_msg("add_session_id: " + response.read(), xbmc.LOGDEBUG)
@@ -100,7 +100,7 @@ def find_dnvod_episode(url):
     episode_list = []
     for div in bs_obj.find_all("div", {"class": "bfan-n"}):
         url = div.a.get('href')
-        url = "http://www.dnvod.eu" + url
+        url = "http://www.dnvod.tv" + url
         episode_name = div.a.text
         episode_item = {}
         episode_item['title'] = title + ' - ' + episode_name
@@ -143,7 +143,7 @@ def get_video_link(url, resolution='sd'):
     pattern_key = re.compile(reg_key)
     res_key = pattern_key.findall(response_content_1)[0]
 
-    url_2 = 'http://www.dnvod.eu/Movie/GetResource.ashx?id='+res_id+'&type=htm'
+    url_2 = 'http://www.dnvod.tv/Movie/GetResource.ashx?id='+res_id+'&type=htm'
     ref = urllib.urlencode({'key': res_key})
     request = urllib2.Request(url_2, ref)
     request.add_header("User-Agent", user_agent)
@@ -208,13 +208,13 @@ def find_dnvod_category(url):
             category_name = cat.a.text
             category_url = cat.a.get('href')
             if "http" not in category_url:
-                category_url = "http://www.dnvod.eu" + category_url
+                category_url = "http://www.dnvod.tv" + category_url
 
             category_item = {}
             category_item['title'] = category_name
             category_item['url'] = category_url
             category_item['mode'] = 105
-            category_item['icon'] = "http://www.dnvod.eu/images/logo.jpg"  # currently using the website icon for categories.
+            category_item['icon'] = "http://www.dnvod.tv/images/logo.jpg"  # currently using the website icon for categories.
             category_item['type'] = ""
             category_item['plot'] = ""
             category_list.append(category_item)
@@ -224,13 +224,13 @@ def find_dnvod_category(url):
                 subcat_name = category_name + " - " + sub_cat.a.text
                 subcat_url = sub_cat.a.get('href')
                 if "http" not in subcat_url:
-                    subcat_url = "http://www.dnvod.eu" + subcat_url
+                    subcat_url = "http://www.dnvod.tv" + subcat_url
 
                 subcat_item = {}
                 subcat_item['title'] = subcat_name
                 subcat_item['url'] = subcat_url
                 subcat_item['mode'] = 105
-                subcat_item['icon'] = "http://www.dnvod.eu/images/logo.jpg"  # currently using the website icon for categories.
+                subcat_item['icon'] = "http://www.dnvod.tv/images/logo.jpg"  # currently using the website icon for categories.
                 subcat_item['type'] = ""
                 subcat_item['plot'] = ""
                 category_list.append(subcat_item)
@@ -265,13 +265,13 @@ def find_dnvod_serie(url, page_num="1"):
         serie_name = serie_info.get("title")
         serie_url = serie_info.get("href")
         if "http" not in serie_url:
-            serie_url = "http://www.dnvod.eu" + serie_url
+            serie_url = "http://www.dnvod.tv" + serie_url
 
         serie_img = serie.find_all("img")[0].get("src")
         if serie_img.startswith("//"):
             serie_img = "http:" + serie_img
         elif not serie_img.startswith("http"):
-            serie_img = "http://www.dnvod.eu" + serie_img
+            serie_img = "http://www.dnvod.tv" + serie_img
 
 
         serie_item = {}
@@ -298,7 +298,7 @@ def find_dnvod_serie(url, page_num="1"):
                     next_item['title'] = "Next Page >>"
                     next_item['url'] = url
                     next_item['mode'] = 105
-                    next_item['icon'] = "http://www.dnvod.eu/images/logo.jpg"  # currently using the website icon for categories.
+                    next_item['icon'] = "http://www.dnvod.tv/images/logo.jpg"  # currently using the website icon for categories.
                     next_item['type'] = ""
                     next_item['plot'] = ""
                     next_item['page_num'] = page_num
@@ -329,8 +329,10 @@ def search_for_serie(url):
     if not search_str:
         return menu.main_menu   # TODO: add dnvod menu instead
 
-    # http://www.dnvod.eu/Movie/Search.aspx?tags=
+    # http://www.dnvod.tv/Movie/Search.aspx?tags=
     url = url + "?tags=" + urllib.quote_plus(search_str)
+
+    operations.log_msg(url)
 
     request = urllib2.Request(url)
     request.add_header("User-Agent", user_agent)
@@ -349,14 +351,14 @@ def search_for_serie(url):
         serie_name = serie_info.get("title")
         serie_url = serie_info.get("href")
         if "http" not in serie_url:
-            serie_url = "http://www.dnvod.eu/Movie/" + serie_url
+            serie_url = "http://www.dnvod.tv/Movie/" + serie_url
         operations.log_msg("serie url: " + serie_url)
 
         serie_img = serie.find_all("img")[0].get("src")
         if serie_img.startswith("//"):
             serie_img = "http:" + serie_img
         elif not serie_img.startswith("http"):
-            serie_img = "http://www.dnvod.eu/Movie/" + serie_img
+            serie_img = "http://www.dnvod.tv/Movie/" + serie_img
 
 
         serie_item = {}

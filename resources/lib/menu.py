@@ -19,10 +19,10 @@
 main_menu = [
     {
         "title": u'多瑙影院',
-        "url": u'http://www.dnvod.eu/',
+        "url": u'http://www.dnvod.tv/',
         "mode": 107,
         "poster": "none",
-        "icon": 'http://www.dnvod.eu/images/logo.jpg',
+        "icon": 'http://www.dnvod.tv/images/logo.jpg',
         # "fanart":os.path.join(home, '', 'fanart.jpg'),
         "type": "",
         "plot": ""
@@ -94,19 +94,19 @@ maplestage_menu = [
 dnvod_menu = [
     {
         "title": u'Search',
-        "url": u'http://www.dnvod.eu/Movie/Search.aspx',
+        "url": u'http://www.dnvod.tv/Movie/Search.aspx',
         "mode": 106,
         "poster": 'none',
-        "icon": 'http://www.dnvod.eu/images/logo.jpg',
+        "icon": 'http://www.dnvod.tv/images/logo.jpg',
         "type": "",
         "plot": ""
     },
     {
         "title": u'List Categories',
-        "url": u'http://www.dnvod.eu/Movie/Search.aspx',
+        "url": u'http://www.dnvod.tv/Movie/Search.aspx',
         "mode": 104,
         "poster": 'none',
-        "icon": 'http://www.dnvod.eu/images/logo.jpg',
+        "icon": 'http://www.dnvod.tv/images/logo.jpg',
         "type": "",
         "plot": ""
     }
